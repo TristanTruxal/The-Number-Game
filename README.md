@@ -57,7 +57,7 @@ This is a game of guessing your opponents number before they guess yours using P
  
 * Software:
   1. Programming Language: Python 3.8 or Higher.
-  2. Libraries: Socket for networking, Threading to manage client sessions, and Argparse for command line arguments
+  2. Libraries: Socket for networking, Threading to manage client sessions, and Argparse for command line arguments, Selectors for multiple connections.
   3. Development Tools: Git for version control, and VS Code as IDE
 
 **Assumptions:**
