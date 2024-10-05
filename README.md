@@ -25,7 +25,7 @@ This is a game of guessing your opponents number before they guess yours using P
 
 * Exclusions:
   1. Graphical user interface (GUI)
-  2. Multi-round games or tournaments
+  2. Tournaments
   3. Advanced statstics or player profiles
  
 **Deliverables:**
@@ -72,3 +72,8 @@ This is a game of guessing your opponents number before they guess yours using P
 
 **Communication Plan**
 1. Email
+
+### Playing The Game
+1. Start the server using "python server.py"
+2. Connect 2 clients using "python client.py 127.0.0.1 12358"
+3. Guess each others number till there is a winner.
