@@ -11,7 +11,6 @@ class ServerCommunication:
         self.sessions = {}
 
     def accept(self, sock):
-        """Accept a new client connection."""
         conn, addr = sock.accept()
         print(f"Accepted connection from {addr}")
         conn.setblocking(False)
