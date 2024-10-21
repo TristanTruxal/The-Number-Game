@@ -73,7 +73,7 @@ This is a game of guessing your opponents number before they guess yours using P
 **Communication Plan**
 1. Email
 
-**Message Protocol
+**Message Protocol**
 1. The program uses Json in order to serialize and deseralize the messages being passed using threading
 
 ### Playing The Game
