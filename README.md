@@ -78,5 +78,5 @@ This is a game of guessing your opponents number before they guess yours using P
 
 ### Playing The Game
 1. Start the server using "python server.py"
-2. Connect 2 clients using "python client.py 127.0.0.1 12358"
+2. Connect 2 clients using "python client.py 127.0.0.1 8080"
 3. communicate with each other using -chat with what you want to say. (more messages types to be added)
