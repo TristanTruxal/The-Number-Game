@@ -21,7 +21,7 @@ This is a game of guessing your opponents number before they guess yours using P
 * Inclusion:
   1. Server and client software to manage game states and user inputs.
   2. ClI interfaces for both server and client to facilitate game setup and play.
-  3. Networking capability to handle simultaneous games in isolated sessiosn
+  3. Networking capability to handle simultaneous games in isolated sessions
 
 * Exclusions:
   1. Graphical user interface (GUI)
@@ -57,7 +57,7 @@ This is a game of guessing your opponents number before they guess yours using P
  
 * Software:
   1. Programming Language: Python 3.8 or Higher.
-  2. Libraries: Socket for networking, Threading to manage client sessions, and Argparse for command line arguments, Selectors for multiple connections.
+  2. Libraries: Socket for networking, Threading to manage client sessions, and Argparse for command line arguments, Selectors for multiple connections, Along with threading for effective message sending.
   3. Development Tools: Git for version control, and VS Code as IDE
 
 **Assumptions:**
@@ -73,7 +73,10 @@ This is a game of guessing your opponents number before they guess yours using P
 **Communication Plan**
 1. Email
 
+**Message Protocol
+1. The program uses Json in order to serialize and deseralize the messages being passed using threading
+
 ### Playing The Game
 1. Start the server using "python server.py"
 2. Connect 2 clients using "python client.py 127.0.0.1 12358"
-3. Guess each others number till there is a winner.
+3. communicate with each other using -chat with what you want to say. (more messages types to be added)
