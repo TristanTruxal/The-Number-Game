@@ -19,7 +19,6 @@ class Game:
             self.send_message(player, {"message": "Unknown option. Please use '-chat <message>' to send a message."})
 
     def handle_chat(self, player, chat_message):
-        """Handle chat messages between players."""
         if player == self.player1:
             self.send_message(self.player2, {"message": f"Player 1 says: {chat_message}"})
         elif player == self.player2:
