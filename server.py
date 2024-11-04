@@ -122,7 +122,7 @@ def set_number(data):
                 emit('game_status', {"message": "Guess the number Player 1 set between 1 and 10.", "showGuessInput": True}, to=game_state[room]["player2"])
                 print(f"{clients[client_id]['username']} set the number {number} in room {room}")
             else:
-                emit('game_status', {"message": "choose a number 1 to 10."}, to=client_id)
+                emit('game_status', {"message": "choose a number"}, to=client_id)
         except ValueError:
             emit('game_status', {"message": "Invalid number format."}, to=client_id)
 
