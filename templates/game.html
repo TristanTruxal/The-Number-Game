@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Number Game</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="game">
+        <h1>Number Guessing Game</h1>
+        
+        <div class="buttons">
+            <button onclick="joinQueue()">Join Queue</button>
+            <div id="queue-status"></div>
+        </div>
+
+        <div id="game-status">Game status will be displayed here</div>
+        
+        <h2>Make Your Guess</h2>
+        <input type="text" id="guessInput" class="hidden" placeholder="Enter a number between 1 and 10">
+        <button id="submitGuessButton" class="hidden" onclick="submitGuess()">Submit</button>
+
+    </div>
+
+    <div class="chat">
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="chatMessage" placeholder="Enter your message">
+            <button onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
+
+    <button id="settings" onclick="showSettings()">Settings</button>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <h2>Game Settings & Information</h2>
+            <p><strong>How the Game Works:</strong></p>
+            <ul>
+                <li>After 2 players enter the queue they are placed in a room</li>
+                <li>Player 1 sets a number between 1 and 10.</li>
+                <li>Player 2 tries to guess it.</li>
+                <li>If Player 2 guesses correctly within 5 rounds, they win. Otherwise, Player 1 wins.</li>
+                <li>Each round allows one guess from Player 2.</li>
+            </ul>
+            <p><strong>Server Information:</strong></p>
+            <p id="server-info">Loading server details</p>
+        </div>
+    </div>
+</body>
+    <script src="/static/script.js"></script>
+</html>
