@@ -106,3 +106,4 @@ This is a game of guessing your opponents number before you run out of rounds us
 4. To start the game you must enter the queue and wait for another person to join
 5. After entering a game one person is selected as the setter and guesser
 6. To win either the guesser enters the right number or the setter wins if they last 5 rounds.
+7. For more information look at the settings by clicking the setting button
