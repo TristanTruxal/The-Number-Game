@@ -88,16 +88,16 @@ This is a game of guessing your opponents number before you run out of rounds us
 2. By updating elements guessInput, submitGuessButton, and game-status based on events from the server, all clients maintain a synchronized view of the game state.
 
 **Turn-Based Gameplay**
-1.The server tracks which player’s turn it is through the game_state dictionary. The set_number and guess_number events ensure only the current player can set or guess numbers
-2.The server broadcasts turn updates to all clients, so both players know whose turn it is.
-3.The player positions is based on who is in the queue first and second.
-
+1. The server tracks which player’s turn it is through the game_state dictionary. The set_number and guess_number events ensure only the current player can set or guess numbers
+2. The server broadcasts turn updates to all clients, so both players know whose turn it is.
+3. The player positions is based on who is in the queue first and second.
+ 
 **Player Identification**
-1.Each player has a unique client_id based on request.sid, which the server uses to manage their state.
-2.Players enter a username on connection, which the server stores and uses for identification during gameplay.
+1. Each player has a unique client_id based on request.sid, which the server uses to manage their state.
+2. Players enter a username on connection, which the server stores and uses for identification during gameplay.
 
 **Chat Functionality**
-1.The sendChatMessage function on the client side sends a message through socket.emit, which the server then broadcasts to all clients.
+1. The sendChatMessage function on the client side sends a message through socket.emit, which the server then broadcasts to all clients.
 
 ### Playing The Game
 1. Start the server using "python server.py"
