@@ -49,9 +49,30 @@ socket.on('paired', function(data) {
 
 socket.on('game_status', function(data) {
     document.getElementById('game-status').textContent = data.message;
-    document.getElementById('guessInput').classList.toggle('hidden', !data.showGuessInput);
-    document.getElementById('submitGuessButton').classList.toggle('hidden', !data.showGuessInput);
+
+    // Show end-game buttons if the game has ended
+    if (data.showEndButtons) {
+        document.getElementById('end-buttons').style.display = 'block';
+    } else {
+        document.getElementById('end-buttons').style.display = 'none';
+    }
+
+    document.getElementById('guessInput').style.display = data.showGuessInput ? 'inline' : 'none';
+    document.getElementById('submitGuessButton').style.display = data.showGuessInput ? 'inline' : 'none';
 });
+
+
+function playAgain() {
+    socket.emit('play_again', { response: "play again" });
+    document.getElementById('end-buttons').style.display = 'none';
+}
+
+
+function quitGame() {
+    socket.emit('play_again', { response: "quit" });
+    document.getElementById('end-buttons').style.display = 'none';
+}
+
 
 function sendChatMessage() {
     const message = document.getElementById('chatMessage').value;
