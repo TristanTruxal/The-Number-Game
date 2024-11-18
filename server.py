@@ -179,7 +179,7 @@ def play_again(data):
                 clients[player2]['room'] = None
                 del game_state[room]
             elif response1 == "play again" and response2 == "play again":
-                emit('game_status', {"message": "Both players chose to play again. Restarting the game!", "showGuessInput": False}, to=room)
+                emit('game_status', {"message": "Both players chose to play again. Restarting the game.", "showGuessInput": False}, to=room)
                 restart_game(room)
 
 def restart_game(room):
@@ -191,7 +191,7 @@ def restart_game(room):
             "play_again_responses": {}
         })
 
-        emit('game_status', {"message": "New game started! Player 1, set a number between 1 and 10.", "showGuessInput": True}, to=game_state[room]["player1"])
+        emit('game_status', {"message": "New game started. Player 1, set a number between 1 and 10.", "showGuessInput": True}, to=game_state[room]["player1"])
         emit('game_status', {"message": "Waiting for Player 1 to set a number.", "showGuessInput": False}, to=game_state[room]["player2"])
 
 
