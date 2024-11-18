@@ -99,6 +99,9 @@ This is a game of guessing your opponents number before you run out of rounds us
 **Chat Functionality**
 1. The sendChatMessage function on the client side sends a message through socket.emit, which the server then broadcasts to all clients.
 
+**Winning Conditions**
+1. If the player selecting the number surivives 5 rounds they win the game, otherwise the player guessing the number wins.
+
 ### Playing The Game
 1. Start the server using "python server.py"
 2. Connect 2 clients clicking on the link for the server
@@ -106,4 +109,5 @@ This is a game of guessing your opponents number before you run out of rounds us
 4. To start the game you must enter the queue and wait for another person to join
 5. After entering a game one person is selected as the setter and guesser
 6. To win either the guesser enters the right number or the setter wins if they last 5 rounds.
-7. For more information look at the settings by clicking the setting button
+7. Afterwards both players are given the opportunity to either play again or quit.
+8. For more information look at the settings by clicking the setting button.
