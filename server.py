@@ -1,3 +1,4 @@
+import argparse
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
@@ -152,19 +153,65 @@ def guess_number(data):
     else:
         emit('game_status', {"message": "Wait for your turn"}, to=client_id)
 
+@socketio.on('play_again')
+def play_again(data):
+    client_id = request.sid
+    room = clients[client_id]['room']
+
+    if room in game_state:
+        if "play_again" not in game_state[room]:
+            game_state[room]["play_again"] = {}
+
+        game_state[room]["play_again"][client_id] = data["response"]
+
+        player1 = game_state[room]["player1"]
+        player2 = game_state[room]["player2"]
+
+        if len(game_state[room]["play_again_responses"]) == 2:
+            response1 = game_state[room]["play_again"][player1]
+            response2 = game_state[room]["play_again"][player2]
+
+            if response1 == "quit" or response2 == "quit":
+                emit('game_status', {"message": "One or both players chose to quit. Ending session.", "showGuessInput": False}, to=room)
+                leave_room(room, sid=player1)
+                leave_room(room, sid=player2)
+                clients[player1]['room'] = None
+                clients[player2]['room'] = None
+                del game_state[room]
+            elif response1 == "play again" and response2 == "play again":
+                emit('game_status', {"message": "Both players chose to play again. Restarting the game!", "showGuessInput": False}, to=room)
+                restart_game(room)
+
+def restart_game(room):
+    if room in game_state:
+        game_state[room].update({
+            "turn": game_state[room]["player1"],
+            "number_to_guess": None,
+            "round_count": 0,
+            "play_again_responses": {}
+        })
+
+        emit('game_status', {"message": "New game started! Player 1, set a number between 1 and 10.", "showGuessInput": True}, to=game_state[room]["player1"])
+        emit('game_status', {"message": "Waiting for Player 1 to set a number.", "showGuessInput": False}, to=game_state[room]["player2"])
+
+
+
 def end_game(room, winner_message):
     if room in game_state:
         player1 = game_state[room]["player1"]
         player2 = game_state[room]["player2"]
-        
-        emit('game_status', {"message": winner_message + " The game has ended. Returning to the lobby.", "showGuessInput": False}, to=room)
-        
-        leave_room(room, sid=player1)
-        leave_room(room, sid=player2)
-        clients[player1]['room'] = None
-        clients[player2]['room'] = None
 
-        del game_state[room]
+        emit('game_status', {
+            "message": f"{winner_message} The game has ended. Choose to play again or quit.",
+            "showEndButtons": True
+        }, to=room)
+
+        game_state[room]["play_again_responses"] = {}
+
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5000)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', type=int, default=5000)
+    args = parser.parse_args()
+    
+    socketio.run(app, host='0.0.0.0', debug=True, port=args.p)
