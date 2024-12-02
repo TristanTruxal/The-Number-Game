@@ -12,6 +12,7 @@
 | User.lobby                                | D) Join_Lobby                         | D1) alone           | ('queue_status', {"message": "You have joined the queue. Waiting for another player."}, to=client_id) |
 |                                           |                                       | D2) paired (player1)| ('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": True}, to=player1) |
 |                                           |                                       | D3) paired (player2)| ('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": False}, to=player2) |
+|                                           |                                       | D4) leave           | ('game_status', {"message": f"{username} has left the room. Returning you to the lobby.", "showGuessInput": False}, to=other_player) |
 |                                           |                                       |                     |                                                           |
 | User.game_start                           | E) start_game                         | E1) player1         | ('game_status', {"message": "You are Player 1. Set a number between 1 and 10 for Player 2 to guess.","showGuessInput": True,"showEndButtons": False}, to=player1) |
 |                                           |                                       | E2) player2         | ('game_status', {"message": "Waiting for Player 1 to set a number.","showGuessInput": False,"showEndButtons": False}, to=player2) |
@@ -32,3 +33,29 @@
 |                                           |                                       |                     |                                                           |
 | User.quit                                 | I) quit                               | I1) quit            | ('game_status', {"message": "One or both players chose to quit. Returning to the lobby.", "showGuessInput": False}, to=room) |
 |                                           |                                       |                     |                                                           |
+
+| Base Choice Coverage Test Set                      |      |      |     |     |     |     |                                 |
+| :------------------------------------------------: | :--: | :--: | :-: | :-: | :-: | :-: | :-----------------------------: |
+| Test                                               |      |      |     |     |     |     | Oracle                          |
+| User.connect                                       | A1   |      |     |     |     |     | pass as connected               |
+| User.disconnect                                    | B1   |      |     |     |     |     | pass as disconnection           |
+| User.disconnect_from_lobby                         | B2   |      |     |     |     |     | pass as exit from room          |
+| User.send_message_to_lobby                         | C1   |      |     |     |     |     | pass as message to lobby        |
+| User.send_message_to_room                          | C2   |      |     |     |     |     | pass as message to room         |
+| User.join_queue                                    | D1   |      |     |     |     |     | pass as waiting for room        |
+| User.paired                                        | D2   | D3   |     |     |     |     | pass as paired                  |
+| User.start_game                                    | E1   | E2   |     |     |     |     | pass as game started            |
+| User.set_number_wrong                              | F1   |      |     |     |     |     | pass as exception               |
+| User.set_wrong_input                               | F2   |      |     |     |     |     | pass as exception               |
+| User.set_number                                    | F3   | F4   |     |     |     |     | pass as number set              |
+| User.guess_number_wrong_limit                      | f3   | f4   | g1  |     |     |     | pass as exception               |
+| User.guess_wrong_format                            | f3   | f4   | g2  |     |     |     | pass as exception               |
+| User.guess_number_wrong                            | f3   | f4   | g3  |     |     |     | pass as next round              |
+| User.guess_number_right                            | f3   | f4   | g4  |     |     |     | pass as winner                  |
+| User.guess_number_limit                            | f3   | f4   | g5  |     |     |     | pass as loser                   |
+| User.play_again_after_win                          | f3   | f4   | g4  | h1  | h2  |     | pass as play again after win    |
+| User.play_again_after_lose                         | f3   | f4   | g5  | h1  | h2  |     | pass as play again after lose   |
+| User.quit_after_game_win                           | f3   | f4   | g4  | i1  |     |     | pass as quit after win          |
+| User.quit_after_game_lose                          | f3   | f4   | g5  | i1  |     |     | pass as quit after lose         |
+| User.rejoins_queue_mid_match_guesser               | f3   | f4   | d4  |     |     |     | pass as rejoin queue during match |
+| User.rejoins_queue_mid_match_setter                | f3   | f4   | g3  | d4  |     |     | pass as rejoin queue during match |
