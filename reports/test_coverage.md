@@ -37,17 +37,17 @@
 | Base Choice Coverage Test Set                      |      |      |     |     |     |     |                                 |
 | :------------------------------------------------: | :--: | :--: | :-: | :-: | :-: | :-: | :-----------------------------: |
 | Test                                               |      |      |     |     |     |     | Oracle                          |
-| User.connect                                       | A1   |      |     |     |     |     | pass as connected               |
-| User.disconnect                                    | B1   |      |     |     |     |     | pass as disconnection           |
-| User.disconnect_from_lobby                         | B2   |      |     |     |     |     | pass as exit from room          |
-| User.send_message_to_lobby                         | C1   |      |     |     |     |     | pass as message to lobby        |
-| User.send_message_to_room                          | C2   |      |     |     |     |     | pass as message to room         |
-| User.join_queue                                    | D1   |      |     |     |     |     | pass as waiting for room        |
-| User.paired                                        | D2   | D3   |     |     |     |     | pass as paired                  |
-| User.start_game                                    | E1   | E2   |     |     |     |     | pass as game started            |
-| User.set_number_wrong                              | F1   |      |     |     |     |     | pass as exception               |
-| User.set_wrong_input                               | F2   |      |     |     |     |     | pass as exception               |
-| User.set_number                                    | F3   | F4   |     |     |     |     | pass as number set              |
+| User.connect                                       | a1   |      |     |     |     |     | pass as connected               |
+| User.disconnect                                    | b1   |      |     |     |     |     | pass as disconnection           |
+| User.disconnect_from_lobby                         | b2   |      |     |     |     |     | pass as exit from room          |
+| User.send_message_to_lobby                         | c1   |      |     |     |     |     | pass as message to lobby        |
+| User.send_message_to_room                          | c2   |      |     |     |     |     | pass as message to room         |
+| User.join_queue                                    | d1   |      |     |     |     |     | pass as waiting for room        |
+| User.paired                                        | d2   | d3   |     |     |     |     | pass as paired                  |
+| User.start_game                                    | e1   | e2   |     |     |     |     | pass as game started            |
+| User.set_number_wrong                              | f1   |      |     |     |     |     | pass as exception               |
+| User.set_wrong_input                               | f2   |      |     |     |     |     | pass as exception               |
+| User.set_number                                    | f3   | f4   |     |     |     |     | pass as number set              |
 | User.guess_number_wrong_limit                      | f3   | f4   | g1  |     |     |     | pass as exception               |
 | User.guess_wrong_format                            | f3   | f4   | g2  |     |     |     | pass as exception               |
 | User.guess_number_wrong                            | f3   | f4   | g3  |     |     |     | pass as next round              |
