@@ -50,16 +50,21 @@ socket.on('paired', function(data) {
 socket.on('game_status', function(data) {
     document.getElementById('game-status').textContent = data.message;
 
-    // Show end-game buttons if the game has ended
     if (data.showEndButtons) {
         document.getElementById('end-buttons').style.display = 'block';
     } else {
         document.getElementById('end-buttons').style.display = 'none';
     }
 
-    document.getElementById('guessInput').style.display = data.showGuessInput ? 'inline' : 'none';
-    document.getElementById('submitGuessButton').style.display = data.showGuessInput ? 'inline' : 'none';
+    if (data.showGuessInput) {
+        document.getElementById('guessInput').style.display = 'inline';
+        document.getElementById('submitGuessButton').style.display = 'inline';
+    } else {
+        document.getElementById('guessInput').style.display = 'none';
+        document.getElementById('submitGuessButton').style.display = 'none';
+    }
 });
+
 
 
 function playAgain() {
