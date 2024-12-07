@@ -120,7 +120,6 @@ def join_queue():
 
         print(f"Paired {clients[player1]['username']} and {clients[player2]['username']} in room {room}")
 
-
 @socketio.on('chat_message')
 def chat_message(msg_data):
     client_id = request.sid
@@ -203,8 +202,6 @@ def guess_number(data):
                 "showGuessInput": True
             }, to=client_id)
 
-
-
 @socketio.on('play_again')
 def play_again(data):
     client_id = request.sid
@@ -237,7 +234,6 @@ def play_again(data):
                 emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player1)
                 emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player2)
 
-
 @socketio.on('quit_game')
 def quit_game():
     client_id = request.sid
@@ -262,7 +258,6 @@ def quit_game():
     else:
         emit('queue_status', {"message": "You are not currently in a game.", "showQueueButton": True, "showQuitButton": False}, to=client_id)
 
-
 def restart_game(room):
     if room in game_state:
         game_state[room].update({
@@ -284,8 +279,6 @@ def restart_game(room):
             "showEndButtons": False
         }, to=game_state[room]["player2"])
 
-
-
 def end_game(room, winner_message):
     if room in game_state:
         player1 = game_state[room]["player1"]
@@ -299,7 +292,6 @@ def end_game(room, winner_message):
 
         if "play_again_responses" in game_state[room]:
             del game_state[room]["play_again_responses"]
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
