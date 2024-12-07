@@ -1,5 +1,7 @@
 import argparse
 import time
+import logging
+import os
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
@@ -9,6 +11,20 @@ socketio = SocketIO(app)
 clients = {}
 queue = []
 game_state = {}
+
+REPORT_DIR = "reports"
+ERROR_LOG_FILE = os.path.join(REPORT_DIR, "report.log")
+
+# Ensure the report directory exists
+if not os.path.exists(REPORT_DIR):
+    os.makedirs(REPORT_DIR)
+
+# Configure logging
+logging.basicConfig(
+    filename=ERROR_LOG_FILE,
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 @app.route('/')
 def index():
@@ -63,9 +79,14 @@ def join_queue():
     client_id = request.sid
     username = clients[client_id]['username']
 
+    # Prevent joining the queue if already in a room
+    if client_id in clients and clients[client_id]['room']:
+        emit('queue_status', {"message": "You are already in a game. Leave the game to join the queue."}, to=client_id)
+        return
+
     if client_id not in queue:
         queue.append(client_id)
-        emit('queue_status', {"message": "You have joined the queue. Waiting for another player."}, to=client_id)
+        emit('queue_status', {"message": "You have joined the queue. Waiting for another player.", "showQueueButton": False, "showQuitButton": True}, to=client_id)
 
     if len(queue) >= 2:
         player1 = queue.pop(0)
@@ -85,8 +106,8 @@ def join_queue():
             "round_count": 0,
         }
 
-        emit('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": True}, to=player1)
-        emit('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": False}, to=player2)
+        emit('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": True, "showQueueButton": False, "showQuitButton": True}, to=player1)
+        emit('paired', {"message": "You have been paired with another player. Start chatting", "isPlayer1": False, "showQueueButton": False, "showQuitButton": True}, to=player2)
 
         emit('game_status', {
             "message": "You are Player 1. Set a number between 1 and 10 for Player 2 to guess.",
@@ -126,7 +147,7 @@ def chat_message(msg_data):
 def set_number(data):
     client_id = request.sid
     room = clients[client_id]['room']
-    
+
     if room in game_state and game_state[room]["turn"] == client_id:
         try:
             number = int(data["number"])
@@ -145,7 +166,10 @@ def set_number(data):
                     "showGuessInput": True
                 }, to=client_id)
         except ValueError:
-            emit('game_status', {"message": "Invalid number format. Please enter a valid number."}, to=client_id)
+            error_message = "Invalid number format. Please enter a valid number."
+            emit('game_status', {"message": error_message}, to=client_id)
+            # Log the error to the file
+            logging.error(f"Client {client_id}: {error_message}")
             socketio.sleep(2)
             emit('game_status', {
                 "message": "You are Player 1. Please set a number between 1 and 10.",
@@ -156,7 +180,7 @@ def set_number(data):
 def guess_number(data):
     client_id = request.sid
     room = clients[client_id]['room']
-    
+
     if room in game_state and game_state[room]["turn"] == client_id:
         try:
             guess = int(data["guess"])
@@ -174,14 +198,16 @@ def guess_number(data):
                 game_state[room]["turn"] = game_state[room]["player1"]
                 game_state[room]["number_to_guess"] = None
         except ValueError:
-            emit('game_status', {"message": "Invalid guess format. Please enter a valid number."}, to=client_id)
+            error_message = "Invalid guess format. Please enter a valid number."
+            emit('game_status', {"message": error_message}, to=client_id)
+            # Log the error to the file
+            logging.error(f"Client {client_id}: {error_message}")
             socketio.sleep(2)
             emit('game_status', {
                 "message": "Your turn to guess the number Player 1 set between 1 and 10.",
                 "showGuessInput": True
             }, to=client_id)
-    else:
-        emit('game_status', {"message": "Wait for your turn"}, to=client_id)
+
 
 
 @socketio.on('play_again')
@@ -190,29 +216,59 @@ def play_again(data):
     room = clients[client_id]['room']
 
     if room in game_state:
-        if "play_again" not in game_state[room]:
-            game_state[room]["play_again"] = {}
+        # Track responses for play again
+        if "play_again_responses" not in game_state[room]:
+            game_state[room]["play_again_responses"] = {}
 
-        game_state[room]["play_again"][client_id] = data["response"]
+        game_state[room]["play_again_responses"][client_id] = data["response"]
 
         player1 = game_state[room]["player1"]
         player2 = game_state[room]["player2"]
 
-        if len(game_state[room]["play_again"]) == 2:
-            response1 = game_state[room]["play_again"][player1]
-            response2 = game_state[room]["play_again"][player2]
+        # If both players have responded
+        if len(game_state[room]["play_again_responses"]) == 2:
+            response1 = game_state[room]["play_again_responses"][player1]
+            response2 = game_state[room]["play_again_responses"][player2]
 
-            if response1 == "quit" or response2 == "quit":
-                emit('game_status', {"message": "One or both players chose to quit. Returning to the lobby.", "showGuessInput": False}, to=room)
+            if response1 == "play again" and response2 == "play again":
+                restart_game(room)
+            else:
+                emit('game_status', {"message": "One or both players declined to play again. Returning to the lobby.", "showGuessInput": False, "showEndButtons": False}, to=room)
 
+                # Reset room state
                 leave_room(room, sid=player1)
                 leave_room(room, sid=player2)
                 clients[player1]['room'] = None
                 clients[player2]['room'] = None
                 del game_state[room]
-            elif response1 == "play again" and response2 == "play again":
-                restart_game(room)
 
+                emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player1)
+                emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player2)
+
+
+@socketio.on('quit_game')
+def quit_game():
+    client_id = request.sid
+    if client_id in clients and clients[client_id]['room']:
+        room = clients[client_id]['room']
+        player1 = game_state[room]["player1"]
+        player2 = game_state[room]["player2"]
+
+        emit('game_status', {"message": "The game is ending. Both players are returning to the lobby.", "showGuessInput": False, "showEndButtons": False}, to=room)
+
+        # Reset room state
+        leave_room(room, sid=player1)
+        leave_room(room, sid=player2)
+        clients[player1]['room'] = None
+        clients[player2]['room'] = None
+        del game_state[room]
+
+        emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player1)
+        emit('queue_status', {"message": "You have left the game. Join the queue to play again.", "showQueueButton": True, "showQuitButton": False}, to=player2)
+
+        print(f"Game in room {room} has ended and both players have returned to the lobby.")
+    else:
+        emit('queue_status', {"message": "You are not currently in a game.", "showQueueButton": True, "showQuitButton": False}, to=client_id)
 
 
 def restart_game(room):
