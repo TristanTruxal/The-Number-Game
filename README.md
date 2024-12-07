@@ -3,8 +3,8 @@
 This is a game of guessing your opponents number before you run out of rounds using Python, socketsIO, and flask.
 
 **How to start**
-1. **Start the server:** Run the 'server.py' script.
-2. **Connect clients:** Click on the link to the server.
+1. **Start the server:** Run the 'server.py -p 8080' script.
+2. **Connect clients:** Click on the link to the server which can be found in the report directory.
 3. **Play the game:** Enter the queue and when matched Players take turns choosing a number for the opponent to try and guess from 1 to 10. The player to guess the opponents number first win or the opponent wins if the player runs out of rounds.
 
 **Technologies used**
@@ -101,6 +101,10 @@ This is a game of guessing your opponents number before you run out of rounds us
 
 **Winning Conditions**
 1. If the player selecting the number surivives 5 rounds they win the game, otherwise the player guessing the number wins.
+
+**testing and Error handling**
+1. Wrong input and actions are logged and announced to the individual to change they way they entered their information or inputted the wrong number.
+2. To run a test on the code, while in the root directory run pytest test/test.py
 
 ### Playing The Game
 1. Start the server using "python server.py"
