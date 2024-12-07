@@ -15,11 +15,9 @@ game_state = {}
 REPORT_DIR = "reports"
 ERROR_LOG_FILE = os.path.join(REPORT_DIR, "report.log")
 
-# Ensure the report directory exists
 if not os.path.exists(REPORT_DIR):
     os.makedirs(REPORT_DIR)
 
-# Configure logging
 logging.basicConfig(
     filename=ERROR_LOG_FILE,
     level=logging.ERROR,
@@ -79,7 +77,6 @@ def join_queue():
     client_id = request.sid
     username = clients[client_id]['username']
 
-    # Prevent joining the queue if already in a room
     if client_id in clients and clients[client_id]['room']:
         emit('queue_status', {"message": "You are already in a game. Leave the game to join the queue."}, to=client_id)
         return
@@ -168,7 +165,6 @@ def set_number(data):
         except ValueError:
             error_message = "Invalid number format. Please enter a valid number."
             emit('game_status', {"message": error_message}, to=client_id)
-            # Log the error to the file
             logging.error(f"Client {client_id}: {error_message}")
             socketio.sleep(2)
             emit('game_status', {
@@ -200,7 +196,6 @@ def guess_number(data):
         except ValueError:
             error_message = "Invalid guess format. Please enter a valid number."
             emit('game_status', {"message": error_message}, to=client_id)
-            # Log the error to the file
             logging.error(f"Client {client_id}: {error_message}")
             socketio.sleep(2)
             emit('game_status', {
@@ -216,7 +211,6 @@ def play_again(data):
     room = clients[client_id]['room']
 
     if room in game_state:
-        # Track responses for play again
         if "play_again_responses" not in game_state[room]:
             game_state[room]["play_again_responses"] = {}
 
@@ -225,7 +219,6 @@ def play_again(data):
         player1 = game_state[room]["player1"]
         player2 = game_state[room]["player2"]
 
-        # If both players have responded
         if len(game_state[room]["play_again_responses"]) == 2:
             response1 = game_state[room]["play_again_responses"][player1]
             response2 = game_state[room]["play_again_responses"][player2]
@@ -235,7 +228,6 @@ def play_again(data):
             else:
                 emit('game_status', {"message": "One or both players declined to play again. Returning to the lobby.", "showGuessInput": False, "showEndButtons": False}, to=room)
 
-                # Reset room state
                 leave_room(room, sid=player1)
                 leave_room(room, sid=player2)
                 clients[player1]['room'] = None
