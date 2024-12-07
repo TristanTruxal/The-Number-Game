@@ -4,7 +4,7 @@ This is a game of guessing your opponents number before you run out of rounds us
 
 **How to start**
 1. **Start the server:** Run the 'server.py -p 8080' script.
-2. **Connect clients:** Click on the link to the server which can be found in the report directory.
+2. **Connect clients:** Click on the link to the server which can be found in the report directory inside report.log.
 3. **Play the game:** Enter the queue and when matched Players take turns choosing a number for the opponent to try and guess from 1 to 10. The player to guess the opponents number first win or the opponent wins if the player runs out of rounds.
 
 **Technologies used**
