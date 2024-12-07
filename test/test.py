@@ -144,15 +144,41 @@ class TestGameServer(unittest.TestCase):
 
         self.client1.emit("set_number", {"number": 7})
         self.client2.emit("guess_number", {"guess": 7})
-        self.client1.emit("play_again", {"response": "quit"})
-        self.client2.emit("play_again", {"response": "quit"})
-        response = self.client2.get_received()
-        self.assertTrue(any("chose to quit" in msg["args"][0]["message"] for msg in response
-                if isinstance(msg.get("args"), list) and msg["args"]
-            )
-        )
 
-    def test_queue_mid_match_guesser(self):
+        self.client1.emit("quit_game")
+
+        response_client1 = self.client1.get_received()
+        response_client2 = self.client2.get_received()
+
+        quit_message = "The game is ending. Both players are returning to the lobby."
+        self.assertTrue(any(
+            quit_message in msg.get("args", [{}])[0].get("message", "")
+            for msg in response_client1
+            if isinstance(msg.get("args"), list) and msg["args"]
+        ))
+
+        self.assertTrue(any(
+            quit_message in msg.get("args", [{}])[0].get("message", "")
+            for msg in response_client2
+            if isinstance(msg.get("args"), list) and msg["args"]
+        ))
+
+
+        queue_message = "You have left the game. Join the queue to play again."
+        self.assertTrue(any(
+            queue_message in msg.get("args", [{}])[0].get("message", "")
+            for msg in response_client1
+            if isinstance(msg.get("args"), list) and msg["args"]
+        ))
+
+        self.assertTrue(any(
+            queue_message in msg.get("args", [{}])[0].get("message", "")
+            for msg in response_client2
+            if isinstance(msg.get("args"), list) and msg["args"]
+    ))
+
+
+    def test_leave_mid_match_guesser(self):
         self.client1.emit("username", "Player1")
         self.client2.emit("username", "Player2")
         self.client1.emit("join_queue")
@@ -167,7 +193,7 @@ class TestGameServer(unittest.TestCase):
             if isinstance(msg.get("args"), list) and msg["args"]
         ))
 
-    def test_queue_mid_match_setter(self):
+    def test_leave_mid_match_setter(self):
         self.client1.emit("username", "Player1")
         self.client2.emit("username", "Player2")
         self.client1.emit("join_queue")
