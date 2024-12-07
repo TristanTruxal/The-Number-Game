@@ -57,5 +57,3 @@
 | User.play_again_after_lose                         | f3   | f4   | g5  | h1  | h2  |     | pass as play again after lose   |
 | User.quit_after_game_win                           | f3   | f4   | g4  | i1  |     |     | pass as quit after win          |
 | User.quit_after_game_lose                          | f3   | f4   | g5  | i1  |     |     | pass as quit after lose         |
-| User.rejoins_queue_mid_match_guesser               | f3   | f4   | d4  |     |     |     | pass as rejoin queue during match |
-| User.rejoins_queue_mid_match_setter                | f3   | f4   | g3  | d4  |     |     | pass as rejoin queue during match |
