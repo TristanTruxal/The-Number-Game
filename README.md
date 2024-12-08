@@ -115,3 +115,10 @@ This is a game of guessing your opponents number before you run out of rounds us
 6. To win either the guesser enters the right number or the setter wins if they last 5 rounds.
 7. Afterwards both players are given the opportunity to either play again or quit.
 8. For more information look at the settings by clicking the setting button.
+
+### Next steps for the project?
+1. The later developments could introduce profiles and secure logins, keeping track of wins/loses and switch setter and guesser sides, and adding a tournament mode to the game.
+
+### Retrospective
+1. What went right: I was able to effectively create communication between clients and was able to manage several unqiue users in their own lobbies and play their own unique game, along with creating a game that worked properly.
+2. What could be improved: Higher level of security such as encryption could help protect the individuals data. along with adding the ability to log into a account, and maybe a more colorful UI would help attract more people. As well as adding the ability for the setter and guesser to switch sides in the same game.
