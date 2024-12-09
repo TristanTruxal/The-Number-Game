@@ -294,8 +294,10 @@ def end_game(room, winner_message):
             del game_state[room]["play_again_responses"]
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', type=int, default=5000)
+    parser = argparse.ArgumentParser(
+        description="Run the Number Guessing Game server."
+    )
+    parser.add_argument('-p', type=int, default=5000, help="Port to run the server on. Default is 5000.")
     args = parser.parse_args()
     
     socketio.run(app, host='0.0.0.0', debug=True, port=args.p)
